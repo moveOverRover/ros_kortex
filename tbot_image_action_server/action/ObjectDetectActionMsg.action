@@ -1,0 +1,10 @@
+#goal
+string path
+float32 time_out
+float32 threshold
+---
+#result
+int32 result
+---
+#feedback
+string feedback

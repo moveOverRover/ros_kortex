@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:include filename= "$(find ant_worker_description)/urdf/worker.urdf.xacro"/>
+    <xacro:include filename= "$(find kortex_scripts)/robot_equipment/urdf/worker_mods.xacro"/>
+
+    <xacro:macro name="chair">
+        <xacro:ant_worker/>
+        <xacro:worker_mods/>
+
+        <joint name="elevator_top_joint" type="fixed">
+            <origin xyz="0.1 0 0" rpy="0 0 3.14" />
+            <parent link="elevator_top" />
+            <child link="chair_link" />
+            <axis xyz="0 0 0" />
+        </joint>
+
+        <joint name="chair-base_joint" type="fixed">
+            <origin xyz="-0.1 0 0" rpy="0 3.14 0" />
+            <parent link="chair_link" />
+            <child link="base_link" />
+            <axis xyz="0 0 0" />
+        </joint>
+
+        <link name="chair_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <mass value="4" />
+                <xacro:box_inertia mass="4" x="0.2" y="0.1" z="0.0125" />
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <!-- <mesh filename="package://kortex_scripts/robot_equipment/meshes/parametric_chair.STL" /> -->
+                    <box size="0.2 0.1 0.0125"/>
+                </geometry>
+                <material name="grey">
+                    <color rgba="0.75 0.75 0.75 1"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.2 0.1 0.0125"/>
+                </geometry>
+            </collision>
+        </link>
+
+    </xacro:macro>
+</robot>

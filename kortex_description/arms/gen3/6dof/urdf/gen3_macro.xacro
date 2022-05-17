@@ -5,7 +5,7 @@
   <!-- Propagate last link name information because it is the gripper's parent link -->
   <xacro:property name="last_arm_link" value="end_effector_link"/>
 
-  <xacro:macro name="load_arm" params="parent:='' dof vision prefix *origin">
+  <xacro:macro name="load_arm" params="parent:='' dof vision base prefix *origin">
     <link name="${prefix}base_link">
       <inertial>
         <origin xyz="-0.000648 -0.000166 0.084487" rpy="0 0 0" />
@@ -28,6 +28,9 @@
         </geometry>
       </collision>
     </link>
+    <xacro:if value="${base}"> <!--I added this-->
+      <xacro:chair/>
+    </xacro:if>
     <link name="${prefix}shoulder_link">
       <inertial>
         <origin xyz="-2.3E-05 -0.010364 -0.07336" rpy="0 0 0" />
@@ -243,13 +246,16 @@
     <xacro:if value="${vision}">
       <link name="${prefix}camera_link" />
       <joint name="${prefix}camera_module" type="fixed">
-        <origin xyz="0 0.05639 -0.00305" rpy="3.14159265358979 3.14159265358979 0" />
+        <origin xyz="0 0.05639 0" rpy="4.71 4.71 0" /> 
         <parent link="${prefix}end_effector_link" />
         <child  link="${prefix}camera_link" />
       </joint>
+      <xacro:if value="${base}">
+        <xacro:depth_cam/> <!--I added this-->
+      </xacro:if>
       <link name="${prefix}camera_depth_frame" />
       <joint name="${prefix}depth_module" type="fixed">
-        <origin xyz="0.0275 0.066 -0.00305" rpy="3.14159265358979 3.14159265358979 0" />
+        <origin xyz="0 0.066 -0.00305" rpy="3.14159265358979 3.14159265358979 0" />
         <parent link="${prefix}end_effector_link" />
         <child  link="${prefix}camera_depth_frame" />
       </joint>

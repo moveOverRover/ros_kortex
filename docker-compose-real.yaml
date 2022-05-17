@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  roscore:
+    image: osrf/ros:noetic-desktop-full
+    # networks:
+    #   - tbot_net
+    network_mode: host
+    # ports:
+    #   - 11311:11311
+    command: stdbuf -o L roscore
+
+  driver:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: tbot/main:latest
+    environment:
+      - DISPLAY=${DISPLAY}
+      - "QT_X11_NO_MITSHM=1"
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - ros_kortex_vision:/ros_kortex_vision
+      - ros_kortex:/ros_kortex
+    # networks:
+    #   - tbot_net
+    network_mode: host
+    runtime: nvidia
+    # depends_on:
+    #   - roscore
+    command: roslaunch kortex_driver kortex_driver.launch 'dof:=6' 'gripper:=robotiq_2f_85'
+    # command: tail -F anything
+
+  vision:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: tbot/vision:latest
+    environment:
+      - DISPLAY=${DISPLAY}
+      - "QT_X11_NO_MITSHM=1"
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - ros_kortex_vision:/ros_kortex_vision
+      - ros_kortex:/ros_kortex
+    # networks:
+    #   - tbot_net
+    network_mode: host
+    runtime: nvidia
+    # depends_on:
+    #   - main
+    command: roslaunch kinova_vision kinova_vision_rgbd.launch
+    # command: tail -F anything
+    
+# networks:
+#   tbot_net:
+#     driver: bridge
+
+volumes:
+  ros_kortex:
+   driver: local
+   driver_opts:
+    o: bind
+    type: none
+    device: ./ros_kortex
+  ros_kortex_vision:
+   driver: local
+   driver_opts:
+    o: bind
+    type: none
+    device: ./ros_kortex_vision
