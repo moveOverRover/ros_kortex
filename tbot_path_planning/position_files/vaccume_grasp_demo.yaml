@@ -55,7 +55,7 @@ position_space:
     position:
       x: 0
       y: 0
-      z: 0.5
+      z: 0.25
     orientation: *keep_orientaion
 
   target_2: &target_2
@@ -64,7 +64,7 @@ position_space:
     position: 
       x: 0.18358971262312931
       y: -0.694763985444087
-      z: 0.43379762323929266
+      z: 0.34927423995889867
     orientation: 
       x: 0.7033458382918825
       y: -0.03508201688623919
@@ -79,31 +79,43 @@ position_space:
 
 
 sequence:
-  - eef:
-    - false
 
-  - move:
-    - *home
-    - *prepare_grab
-    - *grab
+  - loop: &loop
+    - eef:
+      - false
 
-  - eef:
-    - true
-  
-  - move:
-    - *target_1
-  
-  - move:
-    - *target_2
+    - move:
+      - *home
+    
+    - move:
+      - *prepare_grab
+    
+    - move:
+      - *grab
 
-  - eef: *dispense_10g
+    - eef:
+      - true
+    
+    - move:
+      - *target_1
+    
+    - move:
+      - *target_2
 
-  - move:
-    - *target_1
-    - *grab
-  
-  - eef:
-    - false
+    - eef: *dispense_10g
 
-  - move:
-    - *home
+    - move:
+      - *target_1
+    
+    - move:
+      - *grab
+    
+    - eef:
+      - false
+
+    - move:
+      - *home
+
+  - do:
+      loop: *loop
+      count: 2

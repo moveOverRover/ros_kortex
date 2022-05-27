@@ -1,0 +1,58 @@
+--- # T-Bot movement sequence empty example
+
+position_space:
+  base: &base
+    position: &keep_position
+      x: 0
+      y: 0
+      z: 0
+    orientation: &keep_orientaion
+      x: 0
+      y: 0
+      z: 0
+      w: 0
+
+  home: &home
+    reference: *base
+    coordinate_system: cartesian
+    position: 
+      x: 0.2599373936064211
+      y: -0.06556275180447203
+      z: 0.4281767787097115
+    orientation: 
+      x: -0.010601392650241575
+      y: -0.9996050745130696
+      z: 0.024279332325628164
+      w: 0.009371206081304675
+
+
+  twist: &twist
+    reference: *home
+    coordinate_system: joints
+    position:
+      - 1.5
+      - 0
+      - 0
+      - 0
+      - 0
+      - 3.14
+
+  away: &away
+    reference: *twist
+    coordinate_system: cartesian
+    position:
+      x: 0.1
+      y: 0
+      z: 0.1
+    orientation: *keep_orientaion
+
+sequence:
+  
+  - move:
+    - *home
+    - *twist
+    - *away
+
+
+
+  
